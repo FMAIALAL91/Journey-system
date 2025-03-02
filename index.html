@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Journey Management System</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Journey Registration</h1>
+        <form id="journeyForm">
+            <div class="form-group">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="departure">Departure Date:</label>
+                <input type="date" id="departure" required>
+            </div>
+
+            <div class="form-group">
+                <label for="destination">Destination:</label>
+                <input type="text" id="destination" required>
+            </div>
+
+            <div class="form-group">
+                <label for="purpose">Purpose:</label>
+                <select id="purpose" required>
+                    <option value="">Select Purpose</option>
+                    <option value="Business">Business</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Training">Training</option>
+                </select>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        // Form submission handler
+        document.getElementById('journeyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Collect data
+            const data = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                departure: document.getElementById('departure').value,
+                destination: document.getElementById('destination').value,
+                purpose: document.getElementById('purpose').value
+            };
+
+            // Send to Google Sheet
+            fetch('https://script.google.com/macros/s/AKfycbyGTpGeA2MYjR-WWQR47e_DVJFVMi6sXQ578O4xSh7PXwbXYga2gJcGa-Vi470hAsRS2Q/exec', {
+                method: 'POST',
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('message').innerHTML = 
+                        '<p style="color: green;">Success! Record saved.</p>';
+                    document.getElementById('journeyForm').reset();
+                } else {
+                    document.getElementById('message').innerHTML = 
+                        '<p style="color: red;">Error! Please try again.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
